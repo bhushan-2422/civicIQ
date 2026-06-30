@@ -5,32 +5,14 @@
 
 ---
 
-## 🏗️ Architecture
-
-```
-Citizens/Officers (Browser)
-        │
-        ▼
-Frontend (Static HTML/CSS/JS — served via nginx on Cloud Run)
-        │
-        ▼
-Main Service (Flask — Cloud Run :5000)
-├── POST /api/complaints    ──────►  Google Cloud Pub/Sub
-│   ├── Validate form                       │
-│   ├── Upload image → GCS                  ▼
-│   ├── Store in Firestore         Processing Service (Flask — Cloud Run :5001)
-│   └── Publish to Pub/Sub         ├── Subscribe to Pub/Sub
-│                                  ├── Fetch complaint from Firestore
-├── GET /api/complaints             ├── Download image from GCS
-├── PATCH /api/complaints/:id/status├── Call Gemini AI API
-├── POST /api/complaints/:id/assign → Twilio SMS
-└── GET /api/stats/*                ├── Duplicate detection (Haversine geo)
-                                    ├── Priority calculation (weighted formula)
-                                    └── Update Firestore → Done
-```
-
+## 🏗️ High level design
+<img width="1389" height="824" alt="Screenshot from 2026-06-30 17-49-13" src="https://github.com/user-attachments/assets/9fea4c4e-d5d8-4e29-aab3-64989288d408" />
 ---
 
+## 🏗️ Sequence Diagram
+<img width="1477" height="818" alt="Screenshot from 2026-06-30 16-36-57" src="https://github.com/user-attachments/assets/a0346546-9042-49c6-be4c-c83a636da4e2" />
+
+---
 ## 🚀 Tech Stack (Google Cloud Native)
 
 | Layer | Technology |
