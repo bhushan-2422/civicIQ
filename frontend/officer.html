@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Officer Portal — CivicIQ</title>
+  <meta name="description" content="Municipal officer dashboard for managing, prioritizing, and resolving civic complaints with AI insights." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/officer.css" />
+
+  <script>
+    window.CIVIC_CONFIG = {
+      MAIN_SERVICE_URL: 'https://civic-main-service-437836275542.asia-south1.run.app',
+      PROCESSING_SERVICE_URL: 'https://civic-processing-service-437836275542.asia-south1.run.app',
+      GOOGLE_MAPS_API_KEY: 'AIzaSyBRMeqU-2GgwenWlT7WmWwoL8-osFp2NKE',
+    };
+  </script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">⚡</div>
+      <div><span class="navbar-title">CivicIQ</span><span class="navbar-subtitle">Civic Intelligence Platform</span></div>
+    </a>
+    <nav class="navbar-nav" id="navbar-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="citizen.html" class="nav-link">Citizen Portal</a>
+      <a href="officer.html" class="nav-link active" aria-current="page">Officer Portal</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+    </nav>
+    <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── Page Header ────────────────────────────────────── -->
+  <header class="page-header">
+    <div class="container">
+      <div class="page-header-badge">🏛️ Officer Portal</div>
+      <h1>Complaint Management Dashboard</h1>
+      <p>Intelligently manage, prioritize and resolve civic complaints with AI-powered insights.</p>
+    </div>
+  </header>
+
+  <div class="container" style="padding-top:var(--space-8);padding-bottom:var(--space-16)">
+
+    <!-- ── Stats Cards ───────────────────────────────────── -->
+    <div class="stats-grid" id="officer-stats-grid" aria-label="Complaint statistics">
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#dbeafe;color:#1d4ed8">📋</div>
+        <div class="stat-card-value" id="s-total">—</div>
+        <div class="stat-card-label">Total Complaints</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#fef3c7;color:#b45309">⏳</div>
+        <div class="stat-card-value" id="s-pending">—</div>
+        <div class="stat-card-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#dcfce7;color:#15803d">✅</div>
+        <div class="stat-card-value" id="s-resolved">—</div>
+        <div class="stat-card-label">Resolved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#fee2e2;color:#b91c1c">🔴</div>
+        <div class="stat-card-value" id="s-high-priority">—</div>
+        <div class="stat-card-label">High Priority</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#ede9fe;color:#6d28d9">⚡</div>
+        <div class="stat-card-value" id="s-avg-priority">—</div>
+        <div class="stat-card-label">Avg Priority Score</div>
+      </div>
+    </div>
+
+    <!-- ── Distribution Charts Row ──────────────────────── -->
+    <div class="grid-2 mb-8">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🏛️ Department Distribution</span></div>
+        <div class="card-body" id="dept-chart-container">
+          <div class="loading-container"><div class="loading-spinner"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">🏷️ Category Distribution</span></div>
+        <div class="card-body" id="cat-chart-container">
+          <div class="loading-container"><div class="loading-spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Filters & Search ──────────────────────────────── -->
+    <div class="card mb-4">
+      <div class="filters-bar" role="search">
+        <div class="search-bar" style="flex:1;min-width:220px">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input type="text" id="search-input" class="form-control" placeholder="Search complaints..." aria-label="Search complaints" />
+        </div>
+        <select id="filter-status" class="form-control" style="width:160px" aria-label="Filter by status">
+          <option value="">All Statuses</option>
+          <option value="PROCESSING">Processing</option>
+          <option value="VALID">Valid</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="RESOLVED">Resolved</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+        <select id="filter-department" class="form-control" style="width:160px" aria-label="Filter by department">
+          <option value="">All Departments</option>
+          <option value="ROADS">Roads</option>
+          <option value="WATER">Water</option>
+          <option value="ELECTRICITY">Electricity</option>
+          <option value="TRAFFIC">Traffic</option>
+          <option value="SANITATION">Sanitation</option>
+          <option value="SEWER">Sewer</option>
+          <option value="PARKS">Parks</option>
+          <option value="OTHER">Other</option>
+        </select>
+        <select id="filter-category" class="form-control" style="width:180px" aria-label="Filter by category">
+          <option value="">All Categories</option>
+          <option value="ROAD_DAMAGE">Road Damage</option>
+          <option value="WATER_LEAKAGE">Water Leakage</option>
+          <option value="STREETLIGHT">Streetlight</option>
+          <option value="TRAFFIC_SIGNAL">Traffic Signal</option>
+          <option value="SEWERAGE">Sewerage</option>
+          <option value="GARBAGE">Garbage</option>
+          <option value="TREE_FALL">Tree Fall</option>
+          <option value="OTHER">Other</option>
+        </select>
+        <select id="sort-by" class="form-control" style="width:160px" aria-label="Sort by">
+          <option value="priorityScore">Highest Priority</option>
+          <option value="createdAt">Newest First</option>
+          <option value="status">Status</option>
+        </select>
+        <button class="btn btn-ghost" id="refresh-btn" onclick="loadComplaints()" aria-label="Refresh complaints">
+          🔄 Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Complaints Table ──────────────────────────────── -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📋 Complaints Queue</span>
+        <span id="total-count-text" class="text-sm text-muted"></span>
+      </div>
+      <div class="table-wrapper" role="region" aria-label="Complaints table">
+        <table id="complaints-table" aria-live="polite">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Department</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Reporter</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="complaints-tbody">
+            <tr><td colspan="9" class="text-center" style="padding:3rem">
+              <div class="loading-spinner" style="margin:0 auto"></div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="officer-pagination" class="pagination" aria-label="Complaints pagination"></div>
+    </div>
+
+  </div><!-- /.container -->
+</div><!-- /.page-wrapper -->
+
+<!-- ── Assign Worker Modal ────────────────────────────────── -->
+<div id="assign-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="assign-modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="assign-modal-title">👷 Assign Worker</span>
+      <button class="modal-close" onclick="closeAssignModal()" aria-label="Close modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-sm text-muted mb-4">Assign a field worker to this complaint. An SMS will be sent to the worker with full complaint details.</p>
+      <div class="form-group">
+        <label class="form-label" for="worker-name">Worker Name <span class="required">*</span></label>
+        <input type="text" id="worker-name" class="form-control" placeholder="e.g. Rajesh Kumar" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="worker-phone">Worker Phone (E.164) <span class="required">*</span></label>
+        <input type="tel" id="worker-phone" class="form-control" placeholder="e.g. +919876543210" />
+        <span class="form-hint">Include country code: +91 for India</span>
+      </div>
+      <input type="hidden" id="assign-complaint-id" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeAssignModal()">Cancel</button>
+      <button class="btn btn-primary" id="assign-submit-btn" onclick="submitAssignment()">
+        📱 Assign & Send SMS
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Update Status Modal ────────────────────────────────── -->
+<div id="status-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="status-modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="status-modal-title">🔄 Update Status</span>
+      <button class="modal-close" onclick="closeStatusModal()" aria-label="Close modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-sm text-muted mb-4">Change the status of this complaint. This will also update the reporter's credibility score.</p>
+      <div class="form-group">
+        <label class="form-label" for="new-status">New Status</label>
+        <select id="new-status" class="form-control">
+          <option value="VALID">✅ VALID — Complaint verified</option>
+          <option value="IN_PROGRESS">🔧 IN PROGRESS — Work has started</option>
+          <option value="RESOLVED">✔️ RESOLVED — Issue fixed</option>
+          <option value="REJECTED">❌ REJECTED — Not a valid complaint</option>
+        </select>
+      </div>
+      <input type="hidden" id="status-complaint-id" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeStatusModal()">Cancel</button>
+      <button class="btn btn-primary" id="status-submit-btn" onclick="submitStatusUpdate()">Update Status</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2024 CivicIQ. Built for Vibe2Ship Hackathon.</span>
+      <span>Made with ❤️ for smarter cities</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/officer.js"></script>
+</body>
+</html>

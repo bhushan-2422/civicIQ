@@ -1,0 +1,119 @@
+/* ============================================================
+   CSS Custom Properties — Design System
+   Civic Intelligence Platform
+   ============================================================ */
+
+:root {
+  /* ── Brand Colors ──────────────────────────────────── */
+  --color-primary: #1a3c6e;
+  --color-primary-dark: #0f2548;
+  --color-primary-light: #2a5298;
+  --color-accent: #e8792b;
+  --color-accent-dark: #c4601d;
+  --color-accent-light: #f0944d;
+
+  /* ── Semantic Colors ───────────────────────────────── */
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-light: #fef3c7;
+  --color-danger: #dc2626;
+  --color-danger-light: #fee2e2;
+  --color-info: #0284c7;
+  --color-info-light: #e0f2fe;
+
+  /* ── Neutrals ──────────────────────────────────────── */
+  --color-white: #ffffff;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+
+  /* ── Typography ────────────────────────────────────── */
+  --font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ── Spacing ───────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* ── Border Radius ─────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ───────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 8px rgba(26, 60, 110, 0.08);
+
+  /* ── Transitions ───────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* ── Layout ────────────────────────────────────────── */
+  --container-max-width: 1280px;
+  --container-padding: var(--space-6);
+  --navbar-height: 64px;
+
+  /* ── Status Colors ─────────────────────────────────── */
+  --status-processing-bg: #fef3c7;
+  --status-processing-text: #92400e;
+  --status-processing-border: #f59e0b;
+
+  --status-valid-bg: #dbeafe;
+  --status-valid-text: #1e40af;
+  --status-valid-border: #3b82f6;
+
+  --status-in-progress-bg: #ede9fe;
+  --status-in-progress-text: #5b21b6;
+  --status-in-progress-border: #8b5cf6;
+
+  --status-resolved-bg: #dcfce7;
+  --status-resolved-text: #14532d;
+  --status-resolved-border: #22c55e;
+
+  --status-rejected-bg: #fee2e2;
+  --status-rejected-text: #7f1d1d;
+  --status-rejected-border: #ef4444;
+}

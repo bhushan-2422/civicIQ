@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complaint Details — CivicIQ</title>
+  <meta name="description" content="View detailed information about a civic complaint including AI analysis, priority score, and status." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/complaint-details.css" />
+
+  <script>
+    window.CIVIC_CONFIG = {
+      MAIN_SERVICE_URL: 'https://civic-main-service-437836275542.asia-south1.run.app',
+      PROCESSING_SERVICE_URL: 'https://civic-processing-service-437836275542.asia-south1.run.app',
+      GOOGLE_MAPS_API_KEY: 'AIzaSyBRMeqU-2GgwenWlT7WmWwoL8-osFp2NKE',
+    };
+  </script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">⚡</div>
+      <div><span class="navbar-title">CivicIQ</span><span class="navbar-subtitle">Civic Intelligence Platform</span></div>
+    </a>
+    <nav class="navbar-nav" id="navbar-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="citizen.html" class="nav-link">Citizen Portal</a>
+      <a href="officer.html" class="nav-link">Officer Portal</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+    </nav>
+    <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── Back Navigation ──────────────────────────────────── -->
+  <div class="back-bar">
+    <div class="container">
+      <button class="btn btn-ghost btn-sm" onclick="history.back()">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── Main Content ─────────────────────────────────────── -->
+  <div class="container details-container" id="details-container">
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <span>Loading complaint details...</span>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2024 CivicIQ.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/complaint-details.js"></script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citizen Portal — CivicIQ</title>
+  <meta name="description" content="Report civic issues, track your complaints, and contribute to a better city through the CivicIQ Citizen Portal." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/citizen.css" />
+
+  <script>
+    window.CIVIC_CONFIG = {
+      MAIN_SERVICE_URL: 'https://civic-main-service-437836275542.asia-south1.run.app',
+      PROCESSING_SERVICE_URL: 'https://civic-processing-service-437836275542.asia-south1.run.app',
+      GOOGLE_MAPS_API_KEY: 'AIzaSyBRMeqU-2GgwenWlT7WmWwoL8-osFp2NKE',
+    };
+  </script>
+</head>
+<body>
+
+<!-- ── Navbar ───────────────────────────────────────────── -->
+<nav class="navbar" role="navigation">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">⚡</div>
+      <div><span class="navbar-title">CivicIQ</span><span class="navbar-subtitle">Civic Intelligence Platform</span></div>
+    </a>
+    <nav class="navbar-nav" id="navbar-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="citizen.html" class="nav-link active" aria-current="page">Citizen Portal</a>
+      <a href="officer.html" class="nav-link">Officer Portal</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+    </nav>
+    <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── Page Header ──────────────────────────────────────── -->
+  <header class="page-header">
+    <div class="container">
+      <div class="page-header-badge">📝 Citizen Portal</div>
+      <h1>Report & Track Civic Issues</h1>
+      <p>Submit your complaint with an image and GPS location. Our AI will analyze and prioritize it automatically.</p>
+    </div>
+  </header>
+
+  <!-- ── Tab Navigation ───────────────────────────────────── -->
+  <div class="citizen-tabs-bar">
+    <div class="container">
+      <div class="tabs-row" role="tablist">
+        <button class="tab-btn active" id="tab-report" role="tab" aria-selected="true" aria-controls="panel-report" onclick="switchTab('report')">
+          📝 Report Issue
+        </button>
+        <button class="tab-btn" id="tab-track" role="tab" aria-selected="false" aria-controls="panel-track" onclick="switchTab('track')">
+          🔍 Track Complaints
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Report Panel ──────────────────────────────────────── -->
+  <div id="panel-report" role="tabpanel" aria-labelledby="tab-report">
+    <div class="container" style="padding-top:var(--space-8);padding-bottom:var(--space-16)">
+      <div class="report-layout">
+
+        <!-- Form -->
+        <div class="report-form-col">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📋 Complaint Details</span>
+            </div>
+            <div class="card-body">
+              <form id="complaint-form" novalidate>
+
+                <!-- Reporter Info -->
+                <div class="form-section-title">👤 Your Information</div>
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label class="form-label" for="reporter-name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="reporter-name" name="name" class="form-control" placeholder="e.g. Rahul Sharma" required autocomplete="name" />
+                    <span class="form-error hidden" id="err-name">Name is required</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="reporter-phone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="reporter-phone" name="phone" class="form-control" placeholder="e.g. +919876543210" required autocomplete="tel" />
+                    <span class="form-error hidden" id="err-phone">Valid phone required</span>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-section-title">📝 Complaint Details</div>
+                <div class="form-group">
+                  <label class="form-label" for="description">Description <span class="required">*</span></label>
+                  <textarea id="description" name="description" class="form-control" rows="5" placeholder="Describe the issue in detail. Include what you see, how long it's been there, and any safety concerns." required></textarea>
+                  <div class="char-counter"><span id="char-count">0</span> / 1000 characters</div>
+                  <span class="form-error hidden" id="err-description">Description is required (min 20 characters)</span>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="form-group">
+                  <label class="form-label" for="image-upload">📸 Photo Evidence</label>
+                  <div class="image-upload-area" id="image-drop-zone">
+                    <input type="file" id="image-upload" name="image" accept="image/*" class="file-input" aria-label="Upload complaint image" />
+                    <div class="upload-placeholder" id="upload-placeholder">
+                      <div class="upload-icon">📸</div>
+                      <div class="upload-text">Click to upload or drag and drop</div>
+                      <div class="upload-hint">PNG, JPG, WEBP up to 10MB</div>
+                    </div>
+                    <div class="image-preview hidden" id="image-preview">
+                      <img id="preview-img" src="" alt="Preview of uploaded complaint image" />
+                      <button type="button" class="remove-image-btn" id="remove-image-btn" aria-label="Remove image">✕</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Location -->
+                <div class="form-section-title">📍 Location</div>
+                <div class="location-controls">
+                  <button type="button" class="btn btn-ghost" id="get-location-btn">
+                    📍 Use My Location
+                  </button>
+                  <span class="text-muted text-sm">or click on the map to pin location</span>
+                </div>
+                <div class="location-status hidden" id="location-status"></div>
+
+                <div class="map-container" id="location-map" aria-label="Select complaint location on map">
+                  <div class="map-placeholder" id="map-placeholder">
+                    <div class="map-placeholder-content">
+                      🗺️ <br>Map will load here<br><span class="text-xs text-muted">Requires Google Maps API key in config</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid-2" style="margin-top:var(--space-4)">
+                  <div class="form-group">
+                    <label class="form-label" for="latitude">Latitude <span class="required">*</span></label>
+                    <input type="number" id="latitude" name="latitude" class="form-control" placeholder="e.g. 18.5204" step="any" readonly />
+                    <span class="form-error hidden" id="err-latitude">Location is required</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="longitude">Longitude <span class="required">*</span></label>
+                    <input type="number" id="longitude" name="longitude" class="form-control" placeholder="e.g. 73.8567" step="any" readonly />
+                  </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-submit-row">
+                  <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
+                    🚀 Submit Complaint
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Sidebar -->
+        <div class="report-info-col">
+          <div class="info-card">
+            <h3>📌 Tips for a Good Report</h3>
+            <ul class="tips-list">
+              <li>📸 Include a clear photo of the issue</li>
+              <li>📝 Be specific in your description</li>
+              <li>📍 Pin the exact location on the map</li>
+              <li>📱 Save your phone number — we'll track your credibility</li>
+              <li>🤖 AI will auto-classify your complaint</li>
+            </ul>
+          </div>
+          <div class="info-card info-card-blue">
+            <h3>⚡ What Happens Next?</h3>
+            <div class="process-steps">
+              <div class="process-step">
+                <div class="process-dot processing">1</div>
+                <div>
+                  <strong>PROCESSING</strong>
+                  <p>AI analyzes your complaint</p>
+                </div>
+              </div>
+              <div class="process-step">
+                <div class="process-dot valid">2</div>
+                <div>
+                  <strong>VALID</strong>
+                  <p>Complaint verified, priority assigned</p>
+                </div>
+              </div>
+              <div class="process-step">
+                <div class="process-dot in-progress">3</div>
+                <div>
+                  <strong>IN PROGRESS</strong>
+                  <p>Worker assigned, work underway</p>
+                </div>
+              </div>
+              <div class="process-step">
+                <div class="process-dot resolved">4</div>
+                <div>
+                  <strong>RESOLVED</strong>
+                  <p>Issue fixed and closed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Success Message ───────────────────────────────────── -->
+  <div id="success-banner" class="success-banner hidden" role="alert">
+    <div class="container">
+      <div class="success-content">
+        <div class="success-icon">🎉</div>
+        <div class="success-text">
+          <h3>Complaint Submitted Successfully!</h3>
+          <p>Your complaint ID: <strong id="success-complaint-id"></strong></p>
+          <p>Status: <span class="status-badge PROCESSING">⏳ PROCESSING</span></p>
+          <p class="text-sm" style="margin-top:8px;opacity:0.8">Our AI is analyzing your complaint. Check the Track Complaints tab for updates.</p>
+        </div>
+        <div class="success-actions">
+          <button class="btn btn-primary" onclick="switchTab('track')">🔍 Track Status</button>
+          <button class="btn btn-ghost" onclick="resetForm()">📝 Submit Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Track Panel ───────────────────────────────────────── -->
+  <div id="panel-track" role="tabpanel" aria-labelledby="tab-track" class="hidden">
+    <div class="container" style="padding-top:var(--space-8);padding-bottom:var(--space-16)">
+
+      <!-- Quick Lookup -->
+      <div class="quick-lookup-card card mb-8">
+        <div class="card-body">
+          <h3 style="margin-bottom:var(--space-4)">🔎 Quick Complaint Lookup</h3>
+          <div class="lookup-row">
+            <input type="text" id="lookup-id" class="form-control" placeholder="Enter Complaint ID (e.g. abc12345-...)" aria-label="Complaint ID" />
+            <button class="btn btn-primary" id="lookup-btn" onclick="lookupComplaint()">Track</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="card mb-4">
+        <div class="filters-bar">
+          <div class="search-bar" style="flex:1;min-width:200px">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="track-search" class="form-control" placeholder="Search complaints..." aria-label="Search complaints" />
+          </div>
+          <select id="track-status-filter" class="form-control" style="width:160px" aria-label="Filter by status">
+            <option value="">All Statuses</option>
+            <option value="PROCESSING">Processing</option>
+            <option value="VALID">Valid</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="RESOLVED">Resolved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+          <select id="track-sort" class="form-control" style="width:160px" aria-label="Sort by">
+            <option value="createdAt">Newest First</option>
+            <option value="priorityScore">Highest Priority</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Complaints List -->
+      <div id="track-complaints-list" aria-live="polite">
+        <div class="loading-container"><div class="loading-spinner"></div><span>Loading complaints...</span></div>
+      </div>
+
+      <!-- Pagination -->
+      <div id="track-pagination" class="pagination" aria-label="Complaints pagination"></div>
+    </div>
+  </div>
+
+</div><!-- /.page-wrapper -->
+
+<!-- ── Footer ────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2024 CivicIQ. Built for Vibe2Ship Hackathon.</span>
+      <span>Made with ❤️ for smarter cities</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/citizen.js"></script>
+</body>
+</html>

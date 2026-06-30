@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictive Dashboard — CivicIQ</title>
+  <meta name="description" content="Hotspot map and predictive maintenance analytics powered by AI complaint pattern analysis." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+
+  <script>
+    window.CIVIC_CONFIG = {
+      MAIN_SERVICE_URL: 'https://civic-main-service-437836275542.asia-south1.run.app',
+      PROCESSING_SERVICE_URL: 'https://civic-processing-service-437836275542.asia-south1.run.app',
+      GOOGLE_MAPS_API_KEY: 'AIzaSyBRMeqU-2GgwenWlT7WmWwoL8-osFp2NKE',
+    };
+  </script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">⚡</div>
+      <div><span class="navbar-title">CivicIQ</span><span class="navbar-subtitle">Civic Intelligence Platform</span></div>
+    </a>
+    <nav class="navbar-nav" id="navbar-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="citizen.html" class="nav-link">Citizen Portal</a>
+      <a href="officer.html" class="nav-link">Officer Portal</a>
+      <a href="dashboard.html" class="nav-link active" aria-current="page">Dashboard</a>
+    </nav>
+    <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <header class="page-header">
+    <div class="container">
+      <div class="page-header-badge">📊 Analytics Dashboard</div>
+      <h1>Predictive Maintenance & Hotspot Intelligence</h1>
+      <p>AI-powered analysis of complaint patterns to predict areas requiring preventive maintenance.</p>
+    </div>
+  </header>
+
+  <div class="container" style="padding-top:var(--space-8);padding-bottom:var(--space-16)">
+
+    <!-- ── Tab Navigation ──────────────────────────────── -->
+    <div class="dashboard-tabs" role="tablist" style="margin-bottom:var(--space-6)">
+      <button class="tab-btn active" id="tab-hotspot" role="tab" aria-selected="true" onclick="switchDashTab('hotspot')">
+        🗺️ Hotspot Map
+      </button>
+      <button class="tab-btn" id="tab-predictive" role="tab" aria-selected="false" onclick="switchDashTab('predictive')">
+        🔮 Predictive Maintenance
+      </button>
+    </div>
+
+    <!-- ── Hotspot Map Panel ───────────────────────────── -->
+    <div id="panel-hotspot">
+
+      <!-- Map Type Toggle -->
+      <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4)">
+        <button class="btn btn-primary btn-sm" id="btn-heatmap" onclick="setMapMode('heatmap')">🌡️ Heat Map</button>
+        <button class="btn btn-ghost btn-sm" id="btn-markers" onclick="setMapMode('markers')">📍 Markers</button>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:var(--space-6)">
+        <!-- Map -->
+        <div class="card" style="grid-column:1/-1">
+          <div class="card-header">
+            <span class="card-title">🗺️ Complaint Hotspot Map</span>
+            <span id="hotspot-count" class="text-sm text-muted"></span>
+          </div>
+          <div id="hotspot-map" style="height:480px;border-radius:0 0 var(--radius-xl) var(--radius-xl);overflow:hidden;background:var(--color-gray-100)">
+            <div class="map-placeholder" id="hotspot-map-placeholder">
+              <div class="map-placeholder-content">
+                🗺️ Requires Google Maps API key<br>
+                <span class="text-xs">Set GOOGLE_MAPS_API_KEY in frontend config</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend + Stats -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">🔴 Priority Legend</span></div>
+          <div class="card-body">
+            <div class="legend-items">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#dc2626"></div>
+                <span>High Priority (≥70) — Immediate Action</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#d97706"></div>
+                <span>Medium Priority (40–70) — Schedule Soon</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#16a34a"></div>
+                <span>Low Priority (&lt;40) — Routine Maintenance</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">📊 Hotspot Summary</span></div>
+          <div class="card-body">
+            <div id="hotspot-summary-content">
+              <div class="loading-container" style="padding:var(--space-4)"><div class="loading-spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /panel-hotspot -->
+
+    <!-- ── Predictive Panel ────────────────────────────── -->
+    <div id="panel-predictive" class="hidden">
+
+      <div class="predictions-header-row">
+        <div>
+          <h2 class="section-title" style="font-size:var(--font-size-2xl)">🔮 Predictive Maintenance Analysis</h2>
+          <p class="text-muted text-sm" style="margin-top:var(--space-2)">Based on complaint patterns from the last 90 days. Updated on each page load.</p>
+        </div>
+        <button class="btn btn-ghost" onclick="loadPredictions()">🔄 Refresh</button>
+      </div>
+
+      <div id="predictions-grid" class="predictions-grid" aria-live="polite">
+        <div class="loading-container" style="grid-column:1/-1">
+          <div class="loading-spinner"></div>
+          <span>Analyzing complaint patterns...</span>
+        </div>
+      </div>
+    </div><!-- /panel-predictive -->
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2024 CivicIQ. Built for Vibe2Ship Hackathon.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
