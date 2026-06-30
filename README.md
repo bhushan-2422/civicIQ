@@ -432,4 +432,4 @@ Rule-based predictive maintenance analysis.
 
 ---
 
-*Made with ❤️ for smarter cities — Vibe2Ship Hackathon 2024*
+*Made with ❤️ for smarter cities — Vibe2Ship Hackathon 2026*
